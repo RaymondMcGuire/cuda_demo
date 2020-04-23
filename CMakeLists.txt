@@ -12,9 +12,9 @@ if(MSVC)
 	string(REPLACE "/W3" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
     add_compile_options(
-        $<$<CONFIG:>:/MT> #---------|
-        $<$<CONFIG:Debug>:/MTd> #---|-- Statically link the runtime libraries
-        $<$<CONFIG:Release>:/MT> #--|
+        $<$<CONFIG:>:/MT>
+        $<$<CONFIG:Debug>:/MTd> 
+        $<$<CONFIG:Release>:/MT> 
     )
 
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
