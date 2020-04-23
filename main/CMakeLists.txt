@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.17.0)
 
 set(CUDA_LIB_NAME "cuda")
 set(CUDA_LIB_INLCUDE "../cuda/include")
+set(CUDA_RAY_TRACER_LIB_NAME "cuda_ray_tracer")
+set(CUDA_RAY_TRACER_LIB_INLCUDE "../cuda_ray_tracer/include")
+
 set(PROJECT_NAME main)
 
 file(GLOB SOURCES "src/*.cpp" "src/*.c")
@@ -25,8 +28,9 @@ add_executable(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PUBLIC
     include
     ${CUDA_LIB_INLCUDE}
+    ${CUDA_RAY_TRACER_LIB_INLCUDE}
 )
-target_link_libraries(${PROJECT_NAME} ${CUDA_LIB_NAME})
+target_link_libraries(${PROJECT_NAME} ${CUDA_LIB_NAME} ${CUDA_RAY_TRACER_LIB_NAME})
 
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES

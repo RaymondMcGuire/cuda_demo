@@ -8,6 +8,8 @@ set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
+set(GLOBAL_DIR ${PROJECT_SOURCE_DIR})
+
 if(MSVC)
 	string(REPLACE "/W3" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
@@ -25,4 +27,5 @@ endif()
 
 # Add sub project
 add_subdirectory(cuda)
+add_subdirectory(cuda_ray_tracer)
 add_subdirectory(main)
