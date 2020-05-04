@@ -2,9 +2,8 @@
  * @Author: Xu.Wang 
  * @Date: 2020-04-24 00:06:02 
  * @Last Modified by: Xu.Wang
- * @Last Modified time: 2020-04-24 01:17:50
+ * @Last Modified time: 2020-05-03 18:22:19
  */
-#include <cuda_runtime.h>
 #include <cuda_add.h>
 
 __global__ void kernel_add(float *a, float* b,int n)
@@ -26,7 +25,7 @@ void cudaAdd(float *a, float* b,int n)
     cudaMemcpy(y, b, n * sizeof(float), cudaMemcpyHostToDevice);
 
     int blockSize = 256;
-    int numBlocks = (n + blockSize - 1) / blockSize;
+    int numBlocks =ceilDiv(n,blockSize);
     kernel_add<<<numBlocks,blockSize>>>(x, y, n);
     cudaDeviceSynchronize();
 

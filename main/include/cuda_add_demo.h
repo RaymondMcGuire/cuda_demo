@@ -2,16 +2,15 @@
  * @Author: Xu.Wang 
  * @Date: 2020-04-24 00:03:00 
  * @Last Modified by: Xu.Wang
- * @Last Modified time: 2020-04-24 01:22:47
+ * @Last Modified time: 2020-05-03 18:42:39
  */
-#include <iostream>
 #include <math.h>
 #include <cuda_add.h>
 
 void CudaAddDemo()
 {
-    std::cout << "----------------------" << std::endl;
-    std::cout << "CUDA Add Demo " << std::endl;
+    printDemoTitle("CUDA Add Demo");
+
     int n = 1 << 20;
     float *x = new float[n];
     float *y = new float[n];
@@ -26,8 +25,9 @@ void CudaAddDemo()
     float maxError = 0.0f;
     for (int i = 0; i < n; i++)
         maxError = fmax(maxError, fabs(y[i] - 3.0f));
-    std::cout << "Max error: " << maxError << std::endl;
+    cout << "Max error: " << maxError << endl;
 
+    printDemoEnd();
     delete[] x;
     delete[] y;
 }
