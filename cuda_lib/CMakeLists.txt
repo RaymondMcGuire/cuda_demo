@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 3.17.0)
 set(PROJECT_NAME cuda_lib)
 set(CUDA_MATH_LIB_INLCUDE "../cuda_math/include")
 
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4819")
+endif()
+
 file(GLOB SOURCES "src/*.cu" "src/*.cpp" "src/*.c")
 file(GLOB HEADERS "include/*.cuh" "include/*.hpp" "include/*.h")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin)
@@ -22,5 +26,7 @@ set_target_properties(
     OUTPUT_NAME_RELEASE ${PROJECT_NAME}
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
-    include ${CUDA_MATH_LIB_INLCUDE}
+    include 
+    ${CUDA_MATH_LIB_INLCUDE}
+    ${EXTLIB_DIR}
 )
