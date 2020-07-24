@@ -22,8 +22,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ../lib/Debug)
 add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
-    OUTPUT_NAME_DEBUG ${PROJECT_NAME}-debug
+    OUTPUT_NAME_DEBUG ${PROJECT_NAME}d
     OUTPUT_NAME_RELEASE ${PROJECT_NAME}
+    COMPILE_FLAGS "-Xcompiler /wd4819"
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
     include 

@@ -52,7 +52,11 @@ void thrustCopyFill() {
   printDemoTitle("CUDA Thrust Vector Copy Fill");
 
   thrust::device_vector<int> D(10, 1);
+  for (int i = 0; i < D.size(); i++)
+    cout << "D[" << i << "] = " << D[i] << endl;
   thrust::fill(D.begin(), D.begin() + 7, 9);
+  for (int i = 0; i < D.size(); i++)
+    cout << "D[" << i << "] = " << D[i] << endl;
 
   thrust::host_vector<int> H(D.begin(), D.begin() + 5);
 
@@ -178,11 +182,92 @@ void thrustSortByKey() {
   const int N = 6;
   int keys[N] = {1, 4, 2, 8, 5, 7};
   char values[N] = {'a', 'b', 'c', 'd', 'e', 'f'};
-  thrust::sort_by_key(thrust::host, keys, keys + N, values);
+
+  int *ptrKey;
+  char *ptrVal;
+
+  cudaMalloc((void **)&ptrKey, sizeof(int) * N);
+  cudaMalloc((void **)&ptrVal, sizeof(char) * N);
+  cudaMemcpy(ptrKey, keys, N * sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(ptrVal, values, N * sizeof(char), cudaMemcpyHostToDevice);
+
+  thrust::device_ptr<int> tKeys(ptrKey);
+  thrust::device_ptr<char> tVals(ptrVal);
+  thrust::sort_by_key(tKeys, tKeys + N, tVals);
+
+  thrust::device_ptr<int> ttKeys(ptrKey);
+  thrust::device_ptr<char> ttVals(ptrVal);
 
   for (size_t i = 0; i < N; i++) {
-    cout << "keys[" << i << "]:" << keys[i] << endl;
-    cout << "values[" << i << "]:" << values[i] << endl;
+    //cout << "keys[" << i << "]:" << keys[i] << endl;
+    //cout << "values[" << i << "]:" << values[i] << endl;
+
+    cout << "tkeys[" << i << "]:" << tKeys[i] << endl;
+    cout << "tvalues[" << i << "]:" << tVals[i] << endl;
+
+    cout << "ttKeys[" << i << "]:" << ttKeys[i] << endl;
+    cout << "ttVals[" << i << "]:" << ttVals[i] << endl;
   }
   printDemoEnd();
 }
+
+
+void thrustMerge() {
+    printDemoTitle("CUDA thrust merge(merge two array and sort)");
+    int A1[6] = {1, 3, 5, 7, 9, 11};
+    int A2[7] = {1, 1, 2, 3, 5,  8, 13};
+
+    int *ptrA1;
+    int *ptrA2;
+    int *result;
+  
+    cudaMalloc((void **)&ptrA1, sizeof(int) * 6);
+    cudaMalloc((void **)&ptrA2, sizeof(int) * 7);
+    cudaMalloc((void **)&result, sizeof(int) * 13);
+
+    cudaMemcpy(ptrA1, A1, 6 * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(ptrA2, A2, 7 * sizeof(int), cudaMemcpyHostToDevice);
+  
+    thrust::device_ptr<int> dA1(ptrA1);
+    thrust::device_ptr<int> dA2(ptrA2);
+    thrust::device_ptr<int> dresult(result);
+
+    thrust::merge(dA1, dA1 + 6, dA2, dA2 + 7, dresult);
+  
+    for (size_t i = 0; i < 13; i++) {
+
+      cout << "dresult[" << i << "]:" << dresult[i] << endl;
+    }
+    printDemoEnd();
+  }
+
+
+  void thrustMergeTwoArrays() {
+    printDemoTitle("CUDA Thrust Merge Two Arrays");
+  
+    int A1[6] = {1, 3, 5, 7, 9, 11};
+    int A2[7] = {1, 1, 2, 3, 5,  8, 13};
+
+    int *ptrA1;
+    int *ptrA2;
+    int *result;
+  
+    cudaMalloc((void **)&ptrA1, sizeof(int) * 6);
+    cudaMalloc((void **)&ptrA2, sizeof(int) * 7);
+    cudaMalloc((void **)&result, sizeof(int) * 13);
+
+    cudaMemcpy(ptrA1, A1, 6 * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(ptrA2, A2, 7 * sizeof(int), cudaMemcpyHostToDevice);
+  
+    thrust::device_ptr<int> dA1(ptrA1);
+    thrust::device_ptr<int> dA2(ptrA2);
+    thrust::device_ptr<int> dresult(result);
+
+    thrust::copy(dA1, dA1+6, result);
+    thrust::copy(dA2, dA2+7, result+6);
+    for (size_t i = 0; i < 13; i++) {
+
+        cout << "dresult[" << i << "]:" << dresult[i] << endl;
+      }
+    printDemoEnd();
+  }
